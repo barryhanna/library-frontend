@@ -1,32 +1,58 @@
+import React from 'react';
+import { gql, useQuery } from '@apollo/client';
+
+const ALL_BOOKS = gql`
+	query {
+		allBooks {
+			title
+			author
+			published
+		}
+	}
+`;
+
 const Books = (props) => {
-  if (!props.show) {
-    return null
-  }
+	const [books, setBooks] = React.useState([]);
+	const results = useQuery(ALL_BOOKS);
 
-  const books = []
+	React.useEffect(() => {
+		setBooks(results?.data?.allBooks || []);
+	}, [results?.data?.allBooks]);
 
-  return (
-    <div>
-      <h2>books</h2>
+	if (!props.show) {
+		return null;
+	}
 
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
+	if (results.loading) {
+		return <div>Loading books...</div>;
+	}
 
-export default Books
+	if (books.length === 0) {
+		return <p>No books.</p>;
+	}
+
+	return (
+		<div>
+			<h2>books</h2>
+
+			<table>
+				<tbody>
+					<tr>
+						<th>title</th>
+						<th>author</th>
+						<th>published</th>
+					</tr>
+					{books.map((a) => (
+						<tr key={a.title}>
+							<td>{a.title}</td>
+							<td>{a.author}</td>
+							<td>{a.published}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	);
+};
+
+export default Books;

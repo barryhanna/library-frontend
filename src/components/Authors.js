@@ -17,8 +17,8 @@ const Authors = (props) => {
 	const results = useQuery(ALL_AUTHORS);
 
 	useEffect(() => {
-		setAuthors(results.data.allAuthors);
-	}, []);
+		setAuthors(results?.data?.allAuthors || []);
+	}, [results?.data?.allAuthors]);
 
 	if (!props.show) {
 		return null;
@@ -26,6 +26,10 @@ const Authors = (props) => {
 
 	if (results.loading) {
 		return <div>Loading authors...</div>;
+	}
+
+	if (authors.length === 0) {
+		return <p>No books.</p>;
 	}
 
 	return (

@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { ALL_AUTHORS } from '../queries/queries';
+import UpdateAuthor from './UpdateAuthor';
 
 const Authors = (props) => {
 	const [authors, setAuthors] = React.useState([]);
@@ -42,6 +43,7 @@ const Authors = (props) => {
 					))}
 				</tbody>
 			</table>
+			<UpdateAuthor />
 		</div>
 	);
 };

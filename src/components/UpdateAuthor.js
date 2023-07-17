@@ -11,34 +11,35 @@ const UPDATE_AUTHOR_BIRTHYEAR = gql`
 	}
 `;
 
-const UpdateAuthor = ({ setError }) => {
+const UpdateAuthor = ({ authors }) => {
 	const [updateAuthor] = useMutation(UPDATE_AUTHOR_BIRTHYEAR, {
 		refetchQueries: [{ query: ALL_AUTHORS }],
 	});
 
-	const [name, setName] = useState('');
+	const [name, setName] = useState(authors[0].name || '');
 	const [birthyear, setBirthyear] = useState();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		updateAuthor({ variables: { name, born: birthyear } });
-		setName('');
 		setBirthyear('');
 	};
 
 	return (
 		<form onSubmit={handleSubmit}>
 			<h2>Set birthyear</h2>
-			<label htmlFor="name">
-				name
-				<input
-					type="text"
-					name="name"
-					id="name"
-					onChange={(e) => setName(e.target.value)}
-					value={name}
-				/>
-			</label>
+			<select
+				name="name"
+				id="name"
+				value={name}
+				onChange={(e) => setName(e.target.value)}
+			>
+				{authors.map((a) => (
+					<option key={a.name} value={a.name}>
+						{a.name}
+					</option>
+				))}
+			</select>
 			<label htmlFor="born">
 				born
 				<input
